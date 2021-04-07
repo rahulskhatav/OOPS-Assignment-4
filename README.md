@@ -1,111 +1,80 @@
-# OOPS-Assignment-4
-
 ```java
-
 import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Menu;
+import java.awt.MenuBar;
 
-public class Calculator {
-    JFrame main_frame;
-    int operand_1 = 0, operand_2 = 0;
-    char operator = 'N';
-    Calculator(){
+import javax.swing.JFrame;
+
+public class NotepadMenu {
+    JFrame jf;
+    NotepadMenu(){
         // Components
-        main_frame = new JFrame("Calculator");
-        Label title = new Label("Calculator");
-        TextField number = new TextField();
-        Button add = new Button("+");
-        Button sub = new Button("-");
-        Button mul = new Button("x");
-        Button div = new Button("/");
-        Button clr = new Button("Clear");
-        Button res = new Button("=");
+        jf = new JFrame("Notepad");
+        MenuBar mb = new MenuBar();
+        Menu File = new Menu("File");
+        Menu Edit = new Menu("Edit");
+        Menu Settings = new Menu("Settings");
+        Menu Lang = new Menu("Languages");
+        MenuItem New = new MenuItem("New");
+        MenuItem Open = new MenuItem("Open");
+        MenuItem Save = new MenuItem("Save");
+        MenuItem Delete = new MenuItem("Delete");
+        MenuItem Rename = new MenuItem("Rename");
+        MenuItem Print = new MenuItem("Print");
+        MenuItem Cut = new MenuItem("Cut");
+        MenuItem Copy = new MenuItem("Copy");
+        MenuItem Paste = new MenuItem("Paste");
+        MenuItem Convert = new MenuItem("Convert Case");
+        MenuItem Undo = new MenuItem("Undo");
+        MenuItem Import = new MenuItem("Import");
+        MenuItem Background = new MenuItem("Change Background");
+        MenuItem Theme = new MenuItem("Apply Theme");
+        MenuItem C = new MenuItem("C");
+        MenuItem CPP = new MenuItem("C++");
+        MenuItem JAVA = new MenuItem("Java");
+        MenuItem PYTHON = new MenuItem("Python");
+        MenuItem RUBY = new MenuItem("Ruby");
+        MenuItem GO = new MenuItem("Go");
+        MenuItem PHP = new MenuItem("PHP");
+        MenuItem JS = new MenuItem("JavaScript");
 
-        // Events
-        main_frame.addWindowListener(new WindowAdapter(){
-            public void windowClosing(WindowEvent e){
-                main_frame.dispose();
-            }
-        });
-        add.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                operand_1 = Integer.parseInt(number.getText());
-                operator = '+';
-                number.setText("");
-            }
-        });
-        sub.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                operand_1 = Integer.parseInt(number.getText());
-                operator = '-';
-                number.setText("");
-            }
-        });
-        mul.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                operand_1 = Integer.parseInt(number.getText());
-                operator = '*';
-                number.setText("");
-            }
-        });
-        div.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                operand_1 = Integer.parseInt(number.getText());
-                operator = '/';
-                number.setText("");
-            }
-        });
-        res.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                operand_2 = Integer.parseInt(number.getText());
-                number.setText("" + compute());
-            }
-        });
-        clr.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                operand_1 = operand_2 = 0;
-                operator = 'N';       
-                number.setText("");         
-            }
-        });
+        // Adding
+        File.add(New);
+        File.add(Open);
+        File.add(Save);
+        File.add(Delete);
+        File.add(Rename);
+        File.add(Print);
+        Edit.add(Cut);
+        Edit.add(Copy);
+        Edit.add(Paste);
+        Edit.add(Convert);
+        Edit.add(Undo);
+        Settings.add(Import);
+        Settings.add(Background);
+        Settings.add(Theme);
+        Lang.add(C);
+        Lang.add(CPP);
+        Lang.add(JAVA);
+        Lang.add(PYTHON);
+        Lang.add(GO);
+        Lang.add(RUBY);
+        Lang.add(JS);
+        Lang.add(PHP);
+
+        mb.add(File);
+        mb.add(Edit);
+        mb.add(Settings);
+        mb.add(Lang);
 
         // Layout
-        title.setBounds(105, 10, 100, 20);
-        number.setBounds(20, 30, 250, 40);
-        add.setBounds(40, 100, 50, 30);
-        sub.setBounds(120, 100, 50, 30);
-        mul.setBounds(40, 150, 50, 30);
-        div.setBounds(120, 150, 50, 30);
-        clr.setBounds(40, 200, 130, 30);
-        res.setBounds(190, 100, 50, 130);
-        main_frame.setLayout(null);
-        main_frame.setSize(300,300);
-        main_frame.add(number);
-        main_frame.add(title);
-        main_frame.add(add);
-        main_frame.add(sub);
-        main_frame.add(mul);
-        main_frame.add(div);
-        main_frame.add(clr);
-        main_frame.add(res);
-        main_frame.setVisible(true);
+        jf.setMenuBar(mb);
+        jf.setSize(300,300);
+        jf.setLayout(null);
+        jf.setVisible(true);        
     }    
-    float compute(){
-        float res = 0;
-        switch(operator){
-            case '+': res = (float) operand_1 + operand_2; break;
-            case '-': res = (float) operand_1 - operand_2; break;
-            case '*': res = (float) operand_1 * operand_2; break;
-            case '/': res = (float) operand_1 / operand_2; break;
-            default: res = 0;
-        }
-        return res;
-    }
     public static void main(String[] args){
-        new Calculator();
+        new NotepadMenu();
     }
 }
-
-
 ```
