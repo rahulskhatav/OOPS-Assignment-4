@@ -1,80 +1,106 @@
 ```java
 import java.awt.*;
-import java.awt.Menu;
-import java.awt.MenuBar;
+import java.awt.event.*;
+import javax.swing.*;
 
-import javax.swing.JFrame;
-
-public class NotepadMenu {
+public class RegistrationForm {
     JFrame jf;
-    NotepadMenu(){
+    JDialog d;
+    RegistrationForm(){
         // Components
-        jf = new JFrame("Notepad");
-        MenuBar mb = new MenuBar();
-        Menu File = new Menu("File");
-        Menu Edit = new Menu("Edit");
-        Menu Settings = new Menu("Settings");
-        Menu Lang = new Menu("Languages");
-        MenuItem New = new MenuItem("New");
-        MenuItem Open = new MenuItem("Open");
-        MenuItem Save = new MenuItem("Save");
-        MenuItem Delete = new MenuItem("Delete");
-        MenuItem Rename = new MenuItem("Rename");
-        MenuItem Print = new MenuItem("Print");
-        MenuItem Cut = new MenuItem("Cut");
-        MenuItem Copy = new MenuItem("Copy");
-        MenuItem Paste = new MenuItem("Paste");
-        MenuItem Convert = new MenuItem("Convert Case");
-        MenuItem Undo = new MenuItem("Undo");
-        MenuItem Import = new MenuItem("Import");
-        MenuItem Background = new MenuItem("Change Background");
-        MenuItem Theme = new MenuItem("Apply Theme");
-        MenuItem C = new MenuItem("C");
-        MenuItem CPP = new MenuItem("C++");
-        MenuItem JAVA = new MenuItem("Java");
-        MenuItem PYTHON = new MenuItem("Python");
-        MenuItem RUBY = new MenuItem("Ruby");
-        MenuItem GO = new MenuItem("Go");
-        MenuItem PHP = new MenuItem("PHP");
-        MenuItem JS = new MenuItem("JavaScript");
+        jf = new JFrame("Registration Form");
+        JLabel userL = new JLabel("Username:");
+        JLabel passL = new JLabel("Password:");
+        JLabel cpassL = new JLabel("Confirm Password:");
+        JLabel emailL = new JLabel("Email:");
+        JLabel branchL = new JLabel("Branch:");
+        JTextField username = new JTextField();
+        JPasswordField pass = new JPasswordField();
+        JPasswordField confirmpass = new JPasswordField();
+        JTextField email = new JTextField();
+        JRadioButton cse = new JRadioButton();
+        JRadioButton ece = new JRadioButton();
+        JRadioButton eee = new JRadioButton();
+        ButtonGroup grp1 = new ButtonGroup();
+        JButton submit = new JButton("Submit");
+        JLabel status = new JLabel();
+        JLabel cseL = new JLabel("CSE");
+        JLabel eceL = new JLabel("ECE");
+        JLabel eeeL = new JLabel("EEE");
+        d = new JDialog(jf, "Login Status");
 
-        // Adding
-        File.add(New);
-        File.add(Open);
-        File.add(Save);
-        File.add(Delete);
-        File.add(Rename);
-        File.add(Print);
-        Edit.add(Cut);
-        Edit.add(Copy);
-        Edit.add(Paste);
-        Edit.add(Convert);
-        Edit.add(Undo);
-        Settings.add(Import);
-        Settings.add(Background);
-        Settings.add(Theme);
-        Lang.add(C);
-        Lang.add(CPP);
-        Lang.add(JAVA);
-        Lang.add(PYTHON);
-        Lang.add(GO);
-        Lang.add(RUBY);
-        Lang.add(JS);
-        Lang.add(PHP);
+        // Adding and Events
+        grp1.add(cse); 
+        grp1.add(ece); 
+        grp1.add(eee); 
+        d.add(status);
+        jf.add(userL);
+        jf.add(username);
+        jf.add(passL);
+        jf.add(pass);
+        jf.add(cpassL);
+        jf.add(confirmpass);
+        jf.add(emailL);
+        jf.add(email);
+        jf.add(branchL);
+        jf.add(cse);
+        jf.add(ece);
+        jf.add(eee);
+        jf.add(cseL);
+        jf.add(eceL);
+        jf.add(eeeL);
+        jf.add(submit);
 
-        mb.add(File);
-        mb.add(Edit);
-        mb.add(Settings);
-        mb.add(Lang);
+        submit.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                String passText = "" + new String(pass.getPassword());
+                String confirmPassText = "" + new String(confirmpass.getPassword());
+                String res = "";
+
+                if( passText.equals(confirmPassText) ){
+                    res = "Login Successful";
+                }
+                else{
+                    res = "Login Failed";
+                }
+                status.setText(res);
+                d.setVisible(true);
+            }
+        });
+
+        jf.addWindowListener(new WindowAdapter(){
+            public void windowClosing(WindowEvent e){
+                jf.dispose();
+            }
+        });
 
         // Layout
-        jf.setMenuBar(mb);
-        jf.setSize(300,300);
         jf.setLayout(null);
-        jf.setVisible(true);        
-    }    
+        jf.setSize(500, 500);
+        userL.setBounds(50, 30, 100, 20);
+        username.setBounds(250, 30, 150, 20);
+        passL.setBounds(50, 80, 100, 20);
+        pass.setBounds(250, 80, 150, 20);
+        cpassL.setBounds(50, 130, 150, 20);
+        confirmpass.setBounds(250, 130, 150, 20);
+        emailL.setBounds(50, 180, 100, 20);
+        email.setBounds(250, 180, 150, 20);
+        branchL.setBounds(50, 230, 100, 20);
+        cse.setBounds(250, 230, 20, 20);
+        ece.setBounds(250, 270, 20, 20);
+        eee.setBounds(250, 310, 20, 20);
+        cseL.setBounds(280, 230, 100, 20);
+        eceL.setBounds(280, 270, 100, 20);
+        eeeL.setBounds(280, 310, 100, 20);
+        submit.setBounds(50, 350, 400, 50);
+        d.setSize(300, 100);
+        status.setBounds(20, 20, 50, 20);
+        jf.setVisible(true);
+    }
     public static void main(String[] args){
-        new NotepadMenu();
+        new RegistrationForm();
     }
 }
+
+
 ```
