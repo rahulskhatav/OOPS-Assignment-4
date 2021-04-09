@@ -1,51 +1,70 @@
 ```java
+import java.io.*;
+import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileOutputStream;
+
 import javax.swing.*;
 
-public class MouseEvents {
+public class Notepad {
     JFrame jf;
-    String str = "";
-    MouseEvents(){
+    JLabel titleLabel, status;
+    JTextArea writing_area;
+    JButton submit, clear;
+    String str, text;
+    Notepad(){
         // Components
-        jf = new JFrame("Mouse Events");
-        JLabel outputClicked = new JLabel();
-        JLabel outputPressed = new JLabel();
-        JLabel outputReleased = new JLabel();
-        JLabel outputEntered = new JLabel();
-        JLabel outputExited = new JLabel();
+        try{
+            File to_file = new File("demo.txt");
+            if (to_file.createNewFile()) {
+                System.out.println("File created: " + to_file.getName());
+            } 
+            else {
+                System.out.println("File already exists.");
+            }
+        }
+        catch(Exception e){
+            System.out.print(e.getMessage());
+        }
+        
+        
+        jf = new JFrame("Notepad");
+        titleLabel = new JLabel("Enter text:");
+        status = new JLabel();
+        submit = new JButton("Submit");
+        clear = new JButton("Clear");
+        writing_area = new JTextArea();
 
-        // Adding and Layout
-        jf.setSize(300, 300);
-        outputEntered.setBounds(30, 0, 240, 240);
-        outputPressed.setBounds(30, 20, 240, 240);
-        outputReleased.setBounds(30, 40, 240, 240);
-        outputClicked.setBounds(30, 60, 240, 240);
-        outputExited.setBounds(30, 80, 240, 240);
-        jf.add(outputClicked);
-        jf.add(outputPressed);
-        jf.add(outputReleased);
-        jf.add(outputEntered);
-        jf.add(outputExited);
-        jf.setLayout(null);
-        jf.setVisible(true);      
-
-        // Event functions
-        jf.addMouseListener( new MouseListener(){
-            public void mouseClicked(MouseEvent e){
-                outputClicked.setText("Mouse Clicked Time: " + System.currentTimeMillis());
+        // Events
+        submit.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                text = writing_area.getText();
+                try{
+                    if( text.split(" ").length < 30 )
+                        throw new ArithmeticException();
+                    FileOutputStream fos = new FileOutputStream("demo.txt");
+                    byte[] b = text.getBytes();
+                    fos.write(b);
+                    fos.close();
+                    str = "Successfully copied data into the file";
+                }
+                catch(ArithmeticException except){
+                    str = "Minimum number of words should be 30";
+                }
+                catch(Exception except){
+                    str = "Please try again!";
+                }
+                finally{
+                    status.setText(str);
+                }
             }
-            public void mousePressed(MouseEvent e){
-                outputPressed.setText("Mouse Pressed Time: " + System.currentTimeMillis());
-            }
-            public void mouseReleased(MouseEvent e){
-                outputReleased.setText("Mouse Released Time: " + System.currentTimeMillis());
-            }
-            public void mouseEntered(MouseEvent e){
-                outputEntered.setText("Mouse Entered Time: " + System.currentTimeMillis());
-            }
-            public void mouseExited(MouseEvent e){
-                outputExited.setText("Mouse Exited Time: " + System.currentTimeMillis());
+        });
+        clear.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                writing_area.setText("");
+                str = "Cleared";
+                status.setText(str);
             }
         });
         jf.addWindowListener(new WindowAdapter(){
@@ -53,11 +72,27 @@ public class MouseEvents {
                 jf.dispose();
             }
         });
+
+        // Layout
+        jf.setSize(500, 300);
+        titleLabel.setBounds(20, 20, 100, 20);
+        writing_area.setBounds(20, 50, 440, 100);
+        writing_area.setLineWrap(true);
+        submit.setBounds(100, 170, 75, 40);
+        clear.setBounds(300, 170, 75, 40);
+        status.setBounds(100, 220, 300, 20);
+        jf.add(titleLabel);
+        jf.add(writing_area);
+        jf.add(submit);
+        jf.add(clear);
+        jf.add(status);
+        jf.setLayout(null);
+        jf.setVisible(true);
     }
-        
     public static void main(String[] args){
-        new MouseEvents();
-    }    
+        new Notepad();
+    }
 }
+
 
 ```
