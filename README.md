@@ -6,129 +6,91 @@
 #include <algorithm>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 using namespace std;
 
-class iris{
+class lens{
   public:
-  // data
-  vector<float> attr;
-  string iris_class;
-
-  // initialisation
-  iris(vector<string>& _input) {
-    for(int i=0; i<4; i++) {
-      attr.push_back(stof(_input[i]));
-    }
-    iris_class = _input[4];
+  string id;
+  vector<int> data;
+  lens(vector<string>& arr) {
+    int n = arr.size();
+    id = arr[0];
+    for(int i=1; i<n; i++) data.push_back(stoi(arr[i]));
   }
 };
 
-class Node{
-  public:
-  float break_value;
-  string type;
-  vector<iris> members;
-  Node *less, *more;
-  Node(vector<iris> _members) {
-    type = "";
-    break_value = 0;
-    members = _members;
-    less = more = NULL;
-  }
-};
+vector<int> types = {3,2,2,2,3};
+float min_sup;
+unordered_set<string> frequent();
 
-vector<iris> read_data() {
-  vector<iris> data;
+vector<lens> read_data() {
   string temp, word;
-  vector<string> t;
+  vector<string> arr;
+  vector<lens> data;
   fstream fin;
 
-  // Open the data file
-  fin.open("irisdata.csv", ios::in);
+  fin.open("lensesdata.csv", ios::in);
   if(!fin.is_open()) {
-    cout << "Data is not available" << endl;
-    return {};
+    cout << "File not found.\n";
+    return data;
   }
-
   while(fin >> temp) {
     stringstream s(temp);
-    while(getline(s, word, ','))
-      t.push_back(word);
-    data.push_back(iris(t));
-    t.clear();
+    while(getline(s, word, ',')) {
+      arr.push_back(word);
+    }
+    data.push_back(lens(arr));
+    arr.clear();
   }
-
   return data;
 }
 
-Node* create_tree(vector<iris>& data, int i=0) {
-  Node* root = new Node(data);
-  if(i==4) {
-    int x, y, z;
-    x = y = z = 0;
-    for(const iris& t: data) {
-      if(t.iris_class=="Iris-setosa") x++;
-      else if(t.iris_class=="Iris-versicolor") y++;
-      else z++;
+int find_frequency(vector<int> arr, vector<lens>& data){
+  int count = 0;
+  for(const lens& t: data) {
+    bool present = true;
+    for(int i=0; i<arr.size(); i++) {
+      if(arr[i]!=t.data[i]) present = false;
     }
-    if(x>y and x>z) root->type = "Iris-setosa";
-    else if(y>x and y>z) root->type = "Iris-versicolor";
-    else root->type = "Iris-virginica";
+    if(present) count++;
   }
-
-  else {
-    float mean = 0;
-    for(const iris& t: data){
-      mean+=t.attr[i];
-    }
-    mean = mean/(float)data.size();
-
-    root->break_value = mean;
-
-    vector<iris> left, right;
-    for(const iris& t: data){
-      if(t.attr[i]<mean) left.push_back(t);
-      else right.push_back(t);
-    } 
-
-    root->less = create_tree(left, i+1);
-    root->more = create_tree(right, i+1);
-  }
-  
-  return root;
+  return count;
 }
 
-string predict(vector<float>& sample, Node* root) {
-  for(const float& t: sample) {
-    if(!root)
-      return "Iris-virginica";
-    else if(t<root->break_value)
-      root = root->less;
-    else
-      root = root->more;
+void apriori(vector<int> prev, vector<lens>& data) {
+  if(prev.size()==5) return;
+  for(int i=1; i<=types[prev.size()]; i++) {
+    prev.push_back(i);
+    int c = find_frequency(prev, data);
+    float f = (float) c/(float) data.size();
+    if(f>=min_sup) {
+      for(const int& j: prev) cout << j << "\t";
+      cout << endl;
+      apriori(prev, data);
+    }
+    prev.pop_back();
   }
-  return root->type;
 }
+
+
 
 int main() {
-  vector<iris> data = read_data();
-  // Create a decision tree
-  Node* root = create_tree(data);
+  vector<lens> data = read_data();
   
-  vector<float> sample(4, 0);
-  cout << "Sepal Length: ";
-  cin >> sample[0];
-  cout << "Sepal Width: ";
-  cin >> sample[1];
-  cout << "Petal Length: ";
-  cin >> sample[2];
-  cout << "Petal Width: ";
-  cin >> sample[3];
 
-  ofstream output;
-  output.open("output.txt", ios::app);
+  min_sup = 0.10;
+  cout << "\nMin. Support: " << min_sup << endl;
+  apriori({}, data);
 
-  output << sample[0] << "\t" << sample[1] << "\t" << sample[2] << "\t" << sample[3] << "\t" << predict(sample, root) << "\n";
+  min_sup = 0.15;
+  cout << "\nMin. Support: " << min_sup << endl;
+  apriori({}, data);
+
+  min_sup = 0.20;
+  cout << "\nMin. Support: " << min_sup << endl;
+  apriori({}, data);
+
 
   return 0;
 }
